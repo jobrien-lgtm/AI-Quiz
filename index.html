@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What's Your AI Personality at Work? | AMA</title>
+  <meta name="description" content="Discover your AI archetype at work. A quiz from the American Marketing Association's 2026 Marketing Jobs and Skills Report.">
+
+  <!--
+    EXTERNAL RESOURCES (CDN — no npm or build tools needed)
+    ─────────────────────────────────────────────────────────
+    1. Google Fonts: Nunito — rounded, professional, close to AMA's Gotham Rounded
+    2. Lucide Icons — lightweight icon library, replaces inline SVGs
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  <style>
+    /* ============================================================
+       DESIGN TOKENS (CSS Custom Properties)
+       All colors come from the AMA Brand Guidelines.
+       Primary palette = Bone White + Navy for readability.
+       Tertiary palette (Purple, Orange, Aqua) for a youthful feel.
+    ============================================================ */
+    :root {
+      --navy:   #1f304f;  /* AMA French Navy — body text, header bg   */
+      --bone:   #f3f2ee;  /* AMA Bone White  — page background         */
+      --purple: #553b6b;  /* AMA Tertiary Purple — primary UI color    */
+      --orange: #e87531;  /* AMA Tertiary Orange — accents & highlights */
+      --aqua:   #69b5a4;  /* AMA Tertiary Aqua   — success states      */
+      --white:  #ffffff;
+    }
+
+    /* ============================================================
+       RESET & BASE
+       Zero out default browser margins/padding; set sensible base.
+    ============================================================ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Nunito', Arial, sans-serif;
+      background: var(--bone);
+      color: var(--navy);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      line-height: 1.6;
+    }
+
+    /* ============================================================
+       SKIP LINK
+       Accessibility: allows keyboard-only users to jump past the
+       header directly to the quiz content. Visible only on focus.
+    ============================================================ */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 16px;
+      background: var(--purple);
+      color: var(--white);
+      padding: 12px 20px;
+      font-weight: 700;
+      text-decoration: none;
+      border-radius: 0 0 4px 4px;
+      z-index: 999;
+      transition: top 0.1s;
+    }
+    .skip-link:focus { top: 0; }
+
+    /* ============================================================
+       HEADER
+       The AMA logo PNG has a built-in navy background, so we match
+       the header color to make it blend seamlessly.
+    ============================================================ */
+    header {
+      width: 100%;
+      background: var(--navy);
+      padding: 14px 32px;
+      display: flex;
+      align-items: center;
+    }
+    header img {
+      height: 44px;
+      display: block;
+    }
+
+    /* ============================================================
+       MAIN CONTENT WRAPPER
+       Centered, max-width container. flex: 1 pushes footer down.
+    ============================================================ */
+    main {
+      width: 100%;
+      max-width: 700px;
+      padding: 48px 24px 64px;
+      flex: 1;
+    }
+
+    /* ============================================================
+       SCREEN SYSTEM
+       Only one screen is shown at a time. JS adds/removes .active.
+       The fade-in animation provides a smooth transition.
+    ============================================================ */
+    .screen {
+      display: none;
+    }
+    .screen.active {
+      display: block;
+      animation: fadeIn 0.25s ease both;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0);   }
+    }
+
+    /* ============================================================
+       VISUALLY HIDDEN UTILITY
+       Hides content visually but keeps it available to screen readers.
+       Used for labels and descriptive text that doesn't need to show.
+    ============================================================ */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* ============================================================
+       SHARED TYPOGRAPHY
+    ============================================================ */
+
+    /* Small all-caps label that appears above headings */
+    .eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 14px;
+    }
+
+    /* Main page heading — fluid size between 28px and 44px */
+    h1 {
+      font-size: clamp(28px, 5vw, 44px);
+      font-weight: 800;
+      line-height: 1.1;
+    }
+
+    /* Decorative horizontal rule placed under headings */
+    .divider-bar {
+      width: 48px;
+      height: 3px;
+      background: var(--orange);
+      margin: 18px 0 24px;
+      border-radius: 2px;
+    }
+
+    /* ============================================================
+       SHARED BUTTON STYLES
+       All interactive buttons share a visible focus ring so
+       keyboard users always know where they are.
+    ============================================================ */
+    button:focus-visible,
+    a:focus-visible {
+      outline: 3px solid var(--orange);
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+
+    /* ============================================================
+       INTRO SCREEN
+    ============================================================ */
+    .intro-body {
+      font-size: 17px;
+      line-height: 1.75;
+      opacity: 0.85;
+      margin-bottom: 20px;
+    }
+
+    /* "5 archetypes · 5 questions · Which one are you?" */
+    .quiz-meta {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      opacity: 0.5;
+      margin: 28px 0 36px;
+    }
+
+    /* Large "Take the Quiz" button on the intro screen */
+    .btn-primary {
+      background: var(--purple);
+      color: var(--white);
+      border: none;
+      padding: 16px 40px;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: background 0.2s;
+      letter-spacing: 0.5px;
+    }
+    .btn-primary:hover,
+    .btn-primary:focus-visible { background: var(--orange); }
+
+    /* Credit line at the bottom of the intro screen */
+    .credit {
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(31, 48, 79, 0.15);
+      font-size: 13px;
+      line-height: 1.65;
+      opacity: 0.6;
+    }
+
+    /* ============================================================
+       QUIZ SCREEN — PROGRESS BAR
+       Uses ARIA progressbar role for screen reader announcements.
+    ============================================================ */
+    .progress-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .progress-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      opacity: 0.45;
+    }
+    .progress-track {
+      width: 100%;
+      height: 4px;
+      background: rgba(31, 48, 79, 0.12);
+      border-radius: 2px;
+      margin-bottom: 36px;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--orange);
+      border-radius: 2px;
+      transition: width 0.35s ease;
+    }
+
+    /* ============================================================
+       QUIZ SCREEN — QUESTION & ANSWERS
+       Answers use role="radio" + aria-checked for full accessibility.
+       Arrow keys navigate between options (standard radio behavior).
+    ============================================================ */
+    .question-text {
+      font-size: clamp(18px, 3vw, 22px);
+      font-weight: 700;
+      line-height: 1.45;
+      margin-bottom: 24px;
+    }
+
+    /* Wraps the group of answer buttons */
+    .answers-group {
+      margin-bottom: 4px;
+    }
+
+    /* Individual answer button */
+    .btn-answer {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: var(--white);
+      color: var(--navy);
+      border: 2px solid transparent;
+      padding: 16px 18px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      border-radius: 2px;
+      margin-bottom: 10px;
+      line-height: 1.5;
+      transition: border-color 0.15s, background 0.15s, color 0.15s;
+    }
+    .btn-answer:hover {
+      border-color: var(--purple);
+    }
+    /* Selected state — driven by aria-checked attribute */
+    .btn-answer[aria-checked="true"] {
+      border-color: var(--purple);
+      background: var(--purple);
+      color: var(--white);
+    }
+
+    /* Row inside each button: letter badge + answer text */
+    .answer-inner {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    /* Circular letter badge (A, B, C, D, E) */
+    .answer-letter {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--bone);
+      color: var(--navy);
+      font-size: 12px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+      transition: background 0.15s, color 0.15s;
+    }
+    /* Letter badge changes to orange when answer is selected */
+    .btn-answer[aria-checked="true"] .answer-letter {
+      background: var(--orange);
+      color: var(--white);
+    }
+
+    /* "Next →" button — hidden until user picks an answer */
+    .btn-next {
+      display: none;          /* Hidden by default */
+      align-items: center;
+      gap: 8px;
+      background: var(--purple);
+      color: var(--white);
+      border: none;
+      padding: 14px 32px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      border-radius: 2px;
+      margin-top: 16px;
+      transition: background 0.2s;
+    }
+    .btn-next:hover,
+    .btn-next:focus-visible { background: var(--orange); }
+    /* JS adds .visible to show this button after an answer is selected */
+    .btn-next.visible { display: inline-flex; }
+
+    /* ============================================================
+       RESULTS SCREEN — PERSONALITY TYPE
+    ============================================================ */
+    .result-type {
+      font-size: clamp(34px, 7vw, 54px);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+    .result-one-liner {
+      font-size: 17px;
+      line-height: 1.65;
+      font-style: italic;
+      opacity: 0.75;
+      margin-bottom: 24px;
+    }
+    .result-body {
+      font-size: 16px;
+      line-height: 1.75;
+      margin-bottom: 20px;
+    }
+
+    /* ============================================================
+       RESULTS SCREEN — "WATCH OUT FOR" CALLOUT
+    ============================================================ */
+    .watch-out-box {
+      background: var(--white);
+      border-left: 4px solid var(--orange);
+      padding: 16px 20px;
+      margin-bottom: 40px;
+      border-radius: 0 2px 2px 0;
+    }
+    .watch-out-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 6px;
+    }
+    .watch-out-text {
+      font-size: 15px;
+      line-height: 1.65;
+    }
+
+    /* ============================================================
+       RESULTS SCREEN — MIXED RESULT BOX
+       Shown when no single archetype has a clear majority.
+    ============================================================ */
+    .mixed-result-box {
+      display: none; /* shown by JS when there's a tie */
+      background: var(--purple);
+      color: var(--white);
+      padding: 32px;
+      border-radius: 4px;
+      margin-bottom: 28px;
+    }
+    .mixed-result-box h2 {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+    .mixed-result-box p {
+      font-size: 15px;
+      line-height: 1.75;
+      opacity: 0.9;
+    }
+
+    /* ============================================================
+       RESULTS SCREEN — REPORT CTA
+    ============================================================ */
+    .report-cta {
+      background: var(--purple);
+      color: var(--white);
+      padding: 32px;
+      border-radius: 4px;
+      margin-bottom: 28px;
+      text-align: center;
+    }
+    .report-cta h2 {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .report-cta > p {
+      font-size: 14px;
+      line-height: 1.65;
+      opacity: 0.85;
+      margin-bottom: 22px;
+    }
+    .btn-report {
+      display: inline-block;
+      background: var(--orange);
+      color: var(--white);
+      text-decoration: none;
+      padding: 14px 28px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: inherit;
+      border-radius: 2px;
+      transition: opacity 0.2s;
+    }
+    .btn-report:hover,
+    .btn-report:focus-visible { opacity: 0.85; }
+
+    /* ============================================================
+       RESULTS SCREEN — RETAKE BUTTON
+    ============================================================ */
+    .retake-btn {
+      display: block;
+      width: 100%;
+      text-align: center;
+      font-size: 14px;
+      color: var(--navy);
+      opacity: 0.45;
+      background: none;
+      border: none;
+      font-family: inherit;
+      text-decoration: underline;
+      cursor: pointer;
+      padding: 8px;
+      transition: opacity 0.15s;
+    }
+    .retake-btn:hover,
+    .retake-btn:focus-visible { opacity: 0.75; }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    footer {
+      width: 100%;
+      background: var(--purple);
+      color: rgba(255, 255, 255, 0.6);
+      text-align: center;
+      padding: 20px;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    /* ============================================================
+       RESPONSIVE DESIGN
+       Mobile-first — adjustments kick in below 600px.
+    ============================================================ */
+    @media (max-width: 600px) {
+      header  { padding: 12px 16px; }
+      header img { height: 36px; }
+      main    { padding: 32px 16px 48px; }
+
+      /* Tighten CTA and mixed-result padding on small screens */
+      .report-cta,
+      .mixed-result-box { padding: 24px 16px; }
+
+      /* Larger tap targets on mobile */
+      .btn-answer { padding: 18px 14px; }
+    }
+
+    /* ============================================================
+       REDUCED MOTION
+       Disables animations for users who prefer less motion
+       (set in OS accessibility settings).
+    ============================================================ */
+    @media (prefers-reduced-motion: reduce) {
+      .screen.active  { animation: none; }
+      .progress-fill  { transition: none; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ============================================================
+       SKIP LINK
+       The very first focusable element on the page. Pressing Tab
+       from the browser address bar will land here. Pressing Enter
+       jumps keyboard focus straight to the quiz content, skipping
+       the header — essential for keyboard-only navigation.
+  ============================================================ -->
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <!-- ============================================================
+       HEADER
+       role="banner" is the semantic landmark for the site header.
+  ============================================================ -->
+  <header role="banner">
+    <!--
+      Logo image with descriptive alt text.
+      The src contains the full base64-encoded PNG so the image
+      works even when the file is opened directly from disk.
+    -->
+    <img src="data:image/png;base64,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" alt="American Marketing Association">
+  </header>
+
+  <!-- ============================================================
+       MAIN CONTENT
+       aria-live="polite" tells screen readers to announce changes
+       to this region without interrupting what they're currently
+       reading. This handles screen transitions gracefully.
+  ============================================================ -->
+  <main id="main-content" aria-live="polite" aria-atomic="false">
+
+    <!-- ──────────────────────────────────────────────────────────
+         SCREEN 1 — INTRO
+         The landing page users see first.
+    ─────────────────────────────────────────────────────────── -->
+    <section
+      class="screen active"
+      id="screen-intro"
+      aria-labelledby="intro-heading"
+    >
+      <p class="eyebrow" aria-hidden="true">2026 Marketing Jobs &amp; Skills Report</p>
+
+      <h1 id="intro-heading">
+        What's Your AI<br>Personality at Work?
+      </h1>
+      <div class="divider-bar" aria-hidden="true"></div>
+
+      <p class="intro-body">
+        AI is reshaping how we work, but not everyone is adapting the same way.
+        Some people are reimagining their entire jobs. Others are finding clever shortcuts.
+        Some are skeptical bystanders, while others are drowning in their own productivity.
+      </p>
+      <p class="intro-body">
+        There's no single "right" way to use AI — but there are definitely patterns. And
+        pitfalls. Answer honestly about how you're <em>actually</em> using AI at work, not
+        how you think you're supposed to.
+      </p>
+
+      <!-- Screen reader gets the full text; visual version uses middot separators -->
+      <p class="quiz-meta" aria-label="5 archetypes, 5 questions. Which one are you?">
+        5 archetypes &nbsp;&middot;&nbsp; 5 questions &nbsp;&middot;&nbsp; Which one are you?
+      </p>
+
+      <button
+        class="btn-primary"
+        onclick="startQuiz()"
+        aria-label="Begin the AI personality quiz"
+      >
+        Take the Quiz
+      </button>
+
+      <!--
+        Required credit line.
+        Placed here per the brief from the content team.
+      -->
+      <p class="credit">
+        <strong>Credit:</strong> The idea for these AI archetypes came from Jimi Gibson,
+        VP of Brand Communication at Thrive Internet Marketing Agency.
+      </p>
+    </section>
+
+
+    <!-- ──────────────────────────────────────────────────────────
+         SCREEN 2 — QUESTIONS
+         Renders one question at a time. JS populates the answers.
+    ─────────────────────────────────────────────────────────── -->
+    <section
+      class="screen"
+      id="screen-quiz"
+      aria-labelledby="question-text"
+    >
+      <!-- Progress bar ── announces current position to screen readers -->
+      <div class="progress-row">
+        <span
+          class="progress-label"
+          id="progress-label"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          Question 1 of 5
+        </span>
+      </div>
+      <div
+        class="progress-track"
+        role="progressbar"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow="0"
+        aria-label="Quiz progress"
+        id="progress-track"
+      >
+        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+      </div>
+
+      <!-- Question text (also serves as the group label for answers) -->
+      <p class="question-text" id="question-text"></p>
+
+      <!--
+        Answer buttons container.
+        role="radiogroup" groups the answers so screen readers know
+        they are related choices for a single question.
+        aria-labelledby points to the question text as the group label.
+      -->
+      <div
+        class="answers-group"
+        id="answers-container"
+        role="radiogroup"
+        aria-labelledby="question-text"
+        aria-required="true"
+      >
+        <!-- Answer buttons are injected here by renderQuestion() in JS -->
+      </div>
+
+      <!--
+        Next / Submit button.
+        Stays hidden (.btn-next) until the user picks an answer,
+        then JS adds .visible to show it.
+      -->
+      <button
+        class="btn-next"
+        id="btn-next"
+        onclick="nextQuestion()"
+      >
+        Next
+        <!-- Lucide arrow icon — replaced with SVG by lucide.createIcons() -->
+        <i data-lucide="arrow-right" aria-hidden="true" style="width:16px; height:16px;"></i>
+      </button>
+
+    </section>
+
+
+    <!-- ──────────────────────────────────────────────────────────
+         SCREEN 3 — RESULTS
+         Shown after all 5 questions are answered.
+    ─────────────────────────────────────────────────────────── -->
+    <section
+      class="screen"
+      id="screen-results"
+      aria-labelledby="result-type"
+    >
+      <p class="eyebrow" aria-hidden="true">Your AI Personality</p>
+
+      <!-- Personality type name (e.g. "The Architect") -->
+      <h1 class="result-type" id="result-type" tabindex="-1"></h1>
+      <div class="divider-bar" aria-hidden="true"></div>
+
+      <!-- One-sentence summary of the archetype -->
+      <p class="result-one-liner" id="result-one-liner"></p>
+
+      <!-- Full description paragraph -->
+      <p class="result-body" id="result-body"></p>
+
+      <!-- "Watch out for" warning callout -->
+      <aside class="watch-out-box">
+        <p class="watch-out-label" aria-hidden="true">Watch out for</p>
+        <p class="watch-out-text" id="result-watchout"></p>
+      </aside>
+
+      <!-- Mixed result message ────────────────────────────────────
+           Shown by JS (showResults) when no single archetype wins.
+           Hidden by default via CSS display:none on .mixed-result-box.
+      ─────────────────────────────────────────────────────────── -->
+      <div
+        class="mixed-result-box"
+        id="mixed-result-box"
+        role="note"
+      >
+        <h2>Mixed results?</h2>
+        <p>
+          That's actually the most common outcome. Most of us shift between archetypes
+          depending on the task, the pressure we're under, or how much coffee we've had.
+          The point isn't to find your "true type," but to notice your patterns and make
+          more intentional choices about when and how you use AI.
+        </p>
+      </div>
+
+      <!-- Report CTA ──────────────────────────────────────────── -->
+      <div
+        class="report-cta"
+        role="complementary"
+        aria-label="Get the full 2026 report"
+      >
+        <h2>Get the Full 2026 Report</h2>
+        <p>
+          For self-reflection prompts and tips on how to use your results to spark
+          a team conversation, read AMA's 2026 State of Marketing Careers Report.
+        </p>
+        <a
+          class="btn-report"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Get AMA's 2026 State of Marketing Careers Report (opens in new tab)"
+        >
+          Get the Report
+        </a>
+      </div>
+
+      <!-- Retake button -->
+      <button
+        class="retake-btn"
+        onclick="resetQuiz()"
+        aria-label="Retake the quiz from the beginning"
+      >
+        Retake the quiz
+      </button>
+
+    </section>
+
+  </main>
+
+  <!-- ============================================================
+       FOOTER
+       role="contentinfo" is the semantic landmark for site footer.
+  ============================================================ -->
+  <footer role="contentinfo">
+    <p>&copy; 2026 American Marketing Association. All rights reserved.</p>
+  </footer>
+
+
+  <!-- ============================================================
+       JAVASCRIPT — All quiz logic
+       Everything runs in the browser. No data is sent anywhere.
+
+       SECTIONS:
+         1. Icons setup
+         2. Quiz data (questions + result definitions)
+         3. State variables
+         4. Screen management
+         5. Quiz flow (start, render, select, next)
+         6. Results (calculate winner, populate screen)
+         7. Reset quiz
+         8. Init
+  ============================================================ -->
+  <script>
+
+    /* ----------------------------------------------------------
+       1. ICONS
+       lucide.createIcons() scans the page for <i data-lucide="...">
+       elements and replaces them with inline SVGs.
+       Called once on load, and again after JS adds new buttons.
+    ---------------------------------------------------------- */
+    lucide.createIcons();
+
+
+    /* ----------------------------------------------------------
+       2. QUIZ DATA — QUESTIONS
+       5 questions, each with 5 answer choices (A–E).
+       Answer letters map to archetypes:
+         A = Architect   B = Engineer    C = Resister
+         D = Over-Optimizer              E = Juggler
+    ---------------------------------------------------------- */
+    const questions = [
+      {
+        text: "Your team is drowning in status update meetings. How do you respond?",
+        answers: [
+          {
+            letter: "A",
+            text: "I propose we completely rethink how we share information — maybe an AI-powered dashboard, async video summaries, or a new communication structure entirely."
+          },
+          {
+            letter: "B",
+            text: "I build a template that uses AI to generate pre-meeting summaries from our project management system, saving us 15 minutes per meeting."
+          },
+          {
+            letter: "C",
+            text: "I keep attending and contributing the traditional way. These meetings exist for a reason, and face-to-face discussion is important."
+          },
+          {
+            letter: "D",
+            text: "I have AI generate my status updates based on my calendar and Slack messages, then paste them into the meeting doc without reviewing. Done in 30 seconds."
+          },
+          {
+            letter: "E",
+            text: "I volunteer to take on facilitating the meetings AND creating better documentation AND building the new system, because AI makes me faster at all of it."
+          }
+        ]
+      },
+      {
+        text: "You're assigned a research project on a topic outside your expertise. What's your approach?",
+        answers: [
+          {
+            letter: "A",
+            text: "I use AI to help me understand the landscape, then design a completely new framework for how our company should think about this topic going forward."
+          },
+          {
+            letter: "B",
+            text: "I use AI to accelerate the research phase, then apply my judgment to synthesize findings and create actionable recommendations."
+          },
+          {
+            letter: "C",
+            text: "I do the research myself using traditional methods — reading reports, talking to experts, building knowledge the slow but thorough way."
+          },
+          {
+            letter: "D",
+            text: "I ask AI to write the full report, skim it for obvious errors, and submit it. My manager wanted research, so here's research."
+          },
+          {
+            letter: "E",
+            text: "I say yes immediately, then also volunteer to present it to three different stakeholder groups and turn it into a blog post series, because I can do all that now, right?"
+          }
+        ]
+      },
+      {
+        text: "A colleague sends you a confusing, overly formal email that sounds oddly robotic. How do you react?",
+        answers: [
+          {
+            letter: "A",
+            text: "I see this as a symptom of a broken communication system and start thinking about how we could redesign internal comms to be clearer and more human."
+          },
+          {
+            letter: "B",
+            text: "I run it through AI to extract the key points and action items, then respond concisely to what actually matters."
+          },
+          {
+            letter: "C",
+            text: "I read it carefully, maybe twice, and craft a thoughtful response the old-fashioned way."
+          },
+          {
+            letter: "D",
+            text: "That's definitely AI-written, but whatever. I generate an AI response to their AI message and move on. Email ping-pong complete."
+          },
+          {
+            letter: "E",
+            text: "I respond in detail to every point they raised, offer to help with three related things they didn't ask for, and cc two other people who might benefit."
+          }
+        ]
+      },
+      {
+        text: "Your company announces a new AI policy requiring human review of all AI-generated content. How do you feel?",
+        answers: [
+          {
+            letter: "A",
+            text: "I think the policy misses the point. We should be asking what kinds of work require AI in the first place, and redesigning roles accordingly."
+          },
+          {
+            letter: "B",
+            text: "Makes sense. I already review AI outputs carefully, so this just formalizes what good practice looks like."
+          },
+          {
+            letter: "C",
+            text: "Finally. This is what I've been saying all along. You can't just outsource thinking to a machine and expect quality results."
+          },
+          {
+            letter: "D",
+            text: "Annoying. This is going to slow me down. I'll comply on paper but honestly, most of my AI outputs are fine as-is."
+          },
+          {
+            letter: "E",
+            text: "Great, another thing to do. I'll build time into my already packed schedule to review everything properly, even though I'm barely keeping up as it is."
+          }
+        ]
+      },
+      {
+        text: "You notice a junior colleague struggling with a task that AI could help with. What do you do?",
+        answers: [
+          {
+            letter: "A",
+            text: "I help them see this as an opportunity to rethink their whole workflow, not just solve one task. Let's design a better system."
+          },
+          {
+            letter: "B",
+            text: "I show them the specific AI tool or prompt that would help, and walk them through how to verify the output."
+          },
+          {
+            letter: "C",
+            text: "I offer guidance based on how I learned to do it, sharing the manual techniques and expertise that took me years to develop."
+          },
+          {
+            letter: "D",
+            text: "I send them an AI-generated solution and tell them to use that. Problem solved."
+          },
+          {
+            letter: "E",
+            text: "I offer to do it for them since AI makes me so fast. I can knock it out in 10 minutes, and I'm already helping three other people today anyway."
+          }
+        ]
+      }
+    ];
+
+
+    /* ----------------------------------------------------------
+       2b. QUIZ DATA — RESULT DEFINITIONS
+       One entry per archetype letter. Each has:
+         type     — the archetype name displayed as the heading
+         oneLiner — short italic summary line
+         body     — full description paragraph
+         watchOut — the pitfall to watch for
+    ---------------------------------------------------------- */
+    const results = {
+      A: {
+        type: "The Architect",
+        oneLiner: "Sees AI as a catalyst for reimagining work entirely, designing new processes and unlocking possibilities that didn't exist before.",
+        body: "You see AI as a fundamental shift in how work gets done — not just a tool, but a catalyst for reimagining processes, roles, and possibilities. You're energized by designing new workflows from scratch, identifying opportunities that didn't exist before, and thinking strategically about how AI can unlock entirely new ways of solving problems. You're comfortable with ambiguity and experimentation. Your strength is seeing the forest, not just the trees.",
+        watchOut: "Getting so focused on the future that you lose sight of immediate, practical needs. Your ambitious redesigns may outpace your organization's readiness to change."
+      },
+      B: {
+        type: "The Engineer",
+        oneLiner: "Integrates AI pragmatically into existing workflows, focusing on measurable optimization and incremental efficiency gains.",
+        body: "You're pragmatic and methodical. AI is a powerful tool in your toolkit, and you excel at identifying specific pain points where it can drive measurable improvements. You integrate AI thoughtfully into existing workflows, focusing on optimization, efficiency, and reliability. You ask questions like \"What's the ROI?\" and \"How do we measure success?\" You're building on what works rather than tearing everything down and starting over.",
+        watchOut: "Missing transformational opportunities by staying too close to current processes. Incremental gains are valuable, but sometimes the biggest wins require reimagining the game entirely."
+      },
+      C: {
+        type: "The Resister",
+        oneLiner: "Skeptical of AI hype and sticks with proven methods, valuing human expertise and craftsmanship over untested tools.",
+        body: "You're skeptical, and perhaps for good reason. Maybe you've seen too many tech fads come and go, or you're concerned about quality, accuracy, or ethical implications. You prefer proven methods and are wary of the hype around AI. While others rush to adopt, you're holding steady with approaches you know work. You value craftsmanship, expertise, and the human element.",
+        watchOut: "The gap is widening. What feels like principled caution today may become competitive disadvantage tomorrow. Your expertise is valuable — consider how AI might amplify rather than replace it."
+      },
+      D: {
+        type: "The Over-Optimizer",
+        oneLiner: "Delegates too much to AI without sufficient review, creating low-quality output that becomes extra work for colleagues.",
+        body: "You've embraced AI enthusiastically... perhaps too enthusiastically. You delegate extensively to AI tools, sometimes without sufficient review or context. First drafts become final drafts. AI-generated analyses go unchecked. Your output volume has increased, but quality and nuance have suffered. Colleagues spend time deciphering unclear AI-generated emails, fixing errors in AI-drafted documents, or re-doing analyses that missed critical context.",
+        watchOut: "Becoming a bottleneck rather than a force multiplier. Speed without judgment creates friction. The time you save may be costing your team — and your reputation."
+      },
+      E: {
+        type: "The Juggler",
+        oneLiner: "Chasing AI's efficiency gains, takes on an unsustainable workload, turning productivity tools into a path toward burnout.",
+        body: "AI has made you faster, so you've taken on more. And more. And more. You're saying yes to projects you'd have declined before, handling a volume of work that once required a team. You're productive in the moment but stretched thin across an ever-expanding role. The promise of AI-powered efficiency has become a treadmill of escalating expectations. Boundaries have blurred, and burnout is creeping in.",
+        watchOut: "Sustainable productivity requires boundaries, not just better tools. AI should create capacity for strategic thinking and rest — not just an excuse to pack your calendar tighter."
+      }
+    };
+
+
+    /* ----------------------------------------------------------
+       3. STATE
+       These variables track the user's current position and choices.
+       They are reset each time the quiz starts.
+    ---------------------------------------------------------- */
+    let currentQ         = 0;    // Which question we're on (0-indexed)
+    let answers          = [];   // Array of chosen letters, e.g. ['A','C','B','B','E']
+    let currentSelection = null; // Letter chosen for the current question
+
+
+    /* ----------------------------------------------------------
+       4. SCREEN MANAGEMENT
+       showScreen(id) hides all screens, then shows the one with
+       the matching id. It also moves keyboard focus to the screen's
+       main heading so screen reader users hear the new content.
+    ---------------------------------------------------------- */
+    function showScreen(id) {
+      // Hide every screen
+      document.querySelectorAll('.screen').forEach(screen => {
+        screen.classList.remove('active');
+      });
+
+      // Show the requested screen
+      const target = document.getElementById(id);
+      target.classList.add('active');
+
+      // Move focus to the heading inside the new screen.
+      // setTimeout gives the CSS animation a moment to start first.
+      setTimeout(() => {
+        const heading = target.querySelector('h1');
+        if (heading) {
+          heading.setAttribute('tabindex', '-1'); // Make it programmatically focusable
+          heading.focus();
+        }
+      }, 60);
+    }
+
+
+    /* ----------------------------------------------------------
+       5a. START QUIZ
+       Resets all state variables and shows the first question.
+    ---------------------------------------------------------- */
+    function startQuiz() {
+      currentQ         = 0;
+      answers          = [];
+      currentSelection = null;
+      renderQuestion();
+      showScreen('screen-quiz');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+
+    /* ----------------------------------------------------------
+       5b. RENDER QUESTION
+       Builds the answer buttons for the current question.
+       Called every time we advance to a new question.
+    ---------------------------------------------------------- */
+    function renderQuestion() {
+      const q = questions[currentQ];
+
+      // ── Update progress indicator ──────────────────────────
+      const progressPct = Math.round((currentQ / questions.length) * 100);
+
+      document.getElementById('progress-label').textContent =
+        `Question ${currentQ + 1} of ${questions.length}`;
+
+      const fill  = document.getElementById('progress-fill');
+      const track = document.getElementById('progress-track');
+      fill.style.width = progressPct + '%';
+      track.setAttribute('aria-valuenow', progressPct);
+
+      // ── Set question text ──────────────────────────────────
+      document.getElementById('question-text').textContent = q.text;
+
+      // ── Build answer buttons ───────────────────────────────
+      const container = document.getElementById('answers-container');
+      container.innerHTML = ''; // Clear any buttons from previous question
+      currentSelection = null;
+
+      q.answers.forEach((ans, index) => {
+        const btn = document.createElement('button');
+        btn.type  = 'button';
+
+        // ARIA: treat each button as a radio option within the radiogroup
+        btn.setAttribute('role', 'radio');
+        btn.setAttribute('aria-checked', 'false');
+        btn.setAttribute('data-letter', ans.letter);
+        btn.className = 'btn-answer';
+
+        // Label for screen readers: reads the full answer text
+        btn.setAttribute('aria-label', `Option ${ans.letter}: ${ans.text}`);
+
+        // Button content: letter badge + answer text
+        btn.innerHTML = `
+          <span class="answer-inner">
+            <span class="answer-letter" aria-hidden="true">${ans.letter}</span>
+            <span>${ans.text}</span>
+          </span>
+        `;
+
+        // Select this answer on click
+        btn.addEventListener('click', () => selectAnswer(ans.letter, btn));
+
+        // ── Keyboard navigation ────────────────────────────
+        // Arrow keys move focus between options (standard radio group behavior)
+        btn.addEventListener('keydown', (e) => {
+          const allBtns = Array.from(container.querySelectorAll('.btn-answer'));
+          const idx     = allBtns.indexOf(btn);
+
+          if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+            e.preventDefault(); // Prevent page scroll
+            const next = allBtns[idx + 1];
+            if (next) next.focus();
+          }
+          if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+            e.preventDefault();
+            const prev = allBtns[idx - 1];
+            if (prev) prev.focus();
+          }
+          // Space / Enter selects the focused option
+          if (e.key === ' ' || e.key === 'Enter') {
+            e.preventDefault();
+            selectAnswer(ans.letter, btn);
+          }
+        });
+
+        container.appendChild(btn);
+      });
+
+      // Hide the Next button until an answer is chosen
+      document.getElementById('btn-next').classList.remove('visible');
+
+      // Re-run Lucide to pick up the arrow icon on the Next button
+      lucide.createIcons();
+    }
+
+
+    /* ----------------------------------------------------------
+       5c. SELECT ANSWER
+       Updates visual + ARIA state when a user picks an option.
+       Also reveals the Next button.
+    ---------------------------------------------------------- */
+    function selectAnswer(letter, selectedBtn) {
+      // Deselect all answers first
+      document.querySelectorAll('.btn-answer').forEach(btn => {
+        btn.setAttribute('aria-checked', 'false');
+      });
+
+      // Select the clicked answer
+      selectedBtn.setAttribute('aria-checked', 'true');
+      currentSelection = letter;
+
+      // Reveal the Next / Submit button
+      document.getElementById('btn-next').classList.add('visible');
+    }
+
+
+    /* ----------------------------------------------------------
+       5d. NEXT QUESTION (or jump to results on the last question)
+    ---------------------------------------------------------- */
+    function nextQuestion() {
+      if (!currentSelection) return; // Safety check: must have selected an answer
+
+      answers.push(currentSelection); // Save this answer
+
+      if (currentQ < questions.length - 1) {
+        // Still more questions — advance
+        currentQ++;
+        renderQuestion();
+
+        // Move keyboard focus to the first answer button on the new question
+        setTimeout(() => {
+          const firstBtn = document.querySelector('#answers-container .btn-answer');
+          if (firstBtn) firstBtn.focus();
+        }, 80);
+
+      } else {
+        // Last question done — calculate and show results
+        showResults();
+      }
+    }
+
+
+    /* ----------------------------------------------------------
+       6. SHOW RESULTS
+       Tallies answers, finds the winning archetype, and populates
+       the results screen. If two or more archetypes tie for the
+       top count, the mixed-result message is shown instead.
+    ---------------------------------------------------------- */
+    function showResults() {
+      // Count how many times each letter was chosen
+      const counts = { A: 0, B: 0, C: 0, D: 0, E: 0 };
+      answers.forEach(letter => { counts[letter]++; });
+
+      // Find the highest vote count
+      let max = 0;
+      for (const count of Object.values(counts)) {
+        if (count > max) max = count;
+      }
+
+      // Collect all letters that share the top count
+      const topLetters = Object.entries(counts)
+        .filter(([, count]) => count === max)
+        .map(([letter]) => letter);
+
+      const isTied     = topLetters.length > 1;
+      const winner     = topLetters[0]; // used even in tie to pick one archetype
+
+      // Show or hide the archetype content based on whether there's a clear winner
+      const archetypeEls = [
+        document.getElementById('result-type'),
+        document.getElementById('result-one-liner'),
+        document.getElementById('result-body'),
+        document.querySelector('.watch-out-box'),
+      ];
+      const mixedBox = document.getElementById('mixed-result-box');
+
+      if (isTied) {
+        // Hide the per-archetype content; show the mixed-result message
+        archetypeEls.forEach(el => { if (el) el.style.display = 'none'; });
+        mixedBox.style.display = 'block';
+      } else {
+        // Clear any previous mixed state and populate archetype content
+        archetypeEls.forEach(el => { if (el) el.style.display = ''; });
+        mixedBox.style.display = 'none';
+
+        const r = results[winner];
+        document.getElementById('result-type').textContent      = r.type;
+        document.getElementById('result-one-liner').textContent = r.oneLiner;
+        document.getElementById('result-body').textContent      = r.body;
+        document.getElementById('result-watchout').textContent  = r.watchOut;
+      }
+
+      showScreen('screen-results');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+
+    /* ----------------------------------------------------------
+       7. RESET QUIZ
+       Clears all state and returns to the intro screen.
+    ---------------------------------------------------------- */
+    function resetQuiz() {
+      currentQ         = 0;
+      answers          = [];
+      currentSelection = null;
+      showScreen('screen-intro');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+
+    /* ----------------------------------------------------------
+       8. INIT
+       On page load, make sure only the intro screen is visible.
+       (CSS handles this, but this JS ensures it's correct even
+       if the browser caches a partially-rendered state.)
+    ---------------------------------------------------------- */
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-intro').classList.add('active');
+
+  </script>
+
+</body>
+</html>
