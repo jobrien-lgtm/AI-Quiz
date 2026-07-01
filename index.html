@@ -26,8 +26,8 @@
     :root {
       --navy:   #1f304f;  /* AMA French Navy — body text, header bg   */
       --bone:   #f3f2ee;  /* AMA Bone White  — page background         */
-      --purple: #553b6b;  /* AMA Tertiary Purple — primary UI color    */
-      --orange: #e87531;  /* AMA Tertiary Orange — accents & highlights */
+      --purple: #69b5a4;  /* AMA Aqua/Teal — primary UI color    */
+      --orange: #b22b25;  /* AMA Red — accents & highlights */
       --aqua:   #69b5a4;  /* AMA Tertiary Aqua   — success states      */
       --white:  #ffffff;
     }
@@ -174,8 +174,9 @@
     .btn-primary:hover,
     .btn-primary:focus-visible { background: var(--orange); }
 
-    /* Credit line at the bottom of the intro screen */
+    /* (credit line removed) */
     .credit {
+      display: none;
       margin-top: 40px;
       padding-top: 24px;
       border-top: 1px solid rgba(31, 48, 79, 0.15);
@@ -362,8 +363,8 @@
     ============================================================ */
     .mixed-result-box {
       display: none; /* shown by JS when there's a tie */
-      background: var(--purple);
-      color: var(--white);
+      background: var(--white);
+      color: var(--navy);
       padding: 32px;
       border-radius: 4px;
       margin-bottom: 28px;
@@ -376,15 +377,14 @@
     .mixed-result-box p {
       font-size: 15px;
       line-height: 1.75;
-      opacity: 0.9;
     }
 
     /* ============================================================
        RESULTS SCREEN — REPORT CTA
     ============================================================ */
     .report-cta {
-      background: var(--purple);
-      color: var(--white);
+      background: var(--white);
+      color: var(--navy);
       padding: 32px;
       border-radius: 4px;
       margin-bottom: 28px;
@@ -398,7 +398,6 @@
     .report-cta > p {
       font-size: 14px;
       line-height: 1.65;
-      opacity: 0.85;
       margin-bottom: 22px;
     }
     .btn-report {
@@ -492,14 +491,10 @@
       <div class="divider-bar" aria-hidden="true"></div>
 
       <p class="intro-body">
-        AI is reshaping how we work, but not everyone is adapting the same way.
-        Some people are reimagining their entire jobs. Others are finding clever shortcuts.
-        Some are skeptical bystanders, while others are drowning in their own productivity.
+        AI is reshaping how we work, but not everyone is adapting the same way. Some people are reimagining their entire jobs. Others are finding clever shortcuts. Some are skeptical bystanders, while others are drowning in their own productivity.
       </p>
       <p class="intro-body">
-        There's no single "right" way to use AI — but there are definitely patterns. And
-        pitfalls. Answer honestly about how you're <em>actually</em> using AI at work, not
-        how you think you're supposed to.
+        Here's the thing: there's no single "right" way to use AI at work, but there are definitely patterns. And pitfalls. This quiz helps you figure out which archetype you most resemble so you can lean into your strengths and sidestep the traps.
       </p>
 
       <!-- Screen reader gets the full text; visual version uses middot separators -->
@@ -515,14 +510,6 @@
         Take the Quiz
       </button>
 
-      <!--
-        Required credit line.
-        Placed here per the brief from the content team.
-      -->
-      <p class="credit">
-        <strong>Credit:</strong> The idea for these AI archetypes came from Jimi Gibson,
-        VP of Brand Communication at Thrive Internet Marketing Agency.
-      </p>
     </section>
 
 
@@ -713,23 +700,23 @@
         answers: [
           {
             letter: "A",
-            text: "I propose we completely rethink how we share information — maybe an AI-powered dashboard, async video summaries, or a new communication structure entirely."
+            text: "I propose redesigning how the team shares information entirely, using an AI-powered dashboard, async video updates, or a new communication structure that reduces the need for meetings."
           },
           {
             letter: "B",
-            text: "I build a template that uses AI to generate pre-meeting summaries from our project management system, saving us 15 minutes per meeting."
+            text: "I build a template that uses AI to generate pre-meeting summaries from our project management system, saving everyone about 15 minutes per meeting."
           },
           {
             letter: "C",
-            text: "I keep attending and contributing the traditional way. These meetings exist for a reason, and face-to-face discussion is important."
+            text: "I keep attending and contributing the way I always have. These meetings serve a real purpose, and in-person discussion matters."
           },
           {
             letter: "D",
-            text: "I have AI generate my status updates based on my calendar and Slack messages, then paste them into the meeting doc without reviewing. Done in 30 seconds."
+            text: "I have AI pull together my status updates from my calendar and messages, then paste them into the meeting doc."
           },
           {
             letter: "E",
-            text: "I volunteer to take on facilitating the meetings AND creating better documentation AND building the new system, because AI makes me faster at all of it."
+            text: "I volunteer to facilitate the meetings, create better documentation, and build a new system for the team, because AI gives me the capacity to take all of it on."
           }
         ]
       },
@@ -738,23 +725,23 @@
         answers: [
           {
             letter: "A",
-            text: "I use AI to help me understand the landscape, then design a completely new framework for how our company should think about this topic going forward."
+            text: "I use AI to get up to speed quickly, then build a new framework for how our organization should think about the topic going forward."
           },
           {
             letter: "B",
-            text: "I use AI to accelerate the research phase, then apply my judgment to synthesize findings and create actionable recommendations."
+            text: "I use AI to accelerate the research phase, then apply my own judgment to synthesize the findings into actionable recommendations."
           },
           {
             letter: "C",
-            text: "I do the research myself using traditional methods — reading reports, talking to experts, building knowledge the slow but thorough way."
+            text: "I do the research myself using traditional methods: reading reports, talking to experts, and building knowledge the thorough way."
           },
           {
             letter: "D",
-            text: "I ask AI to write the full report, skim it for obvious errors, and submit it. My manager wanted research, so here's research."
+            text: "I ask AI to write the full report, scan it for obvious errors, and submit it."
           },
           {
             letter: "E",
-            text: "I say yes immediately, then also volunteer to present it to three different stakeholder groups and turn it into a blog post series, because I can do all that now, right?"
+            text: "I say yes right away, then also offer to present to three stakeholder groups and turn it into a blog post series, since AI makes all of that feel manageable now."
           }
         ]
       },
@@ -763,23 +750,23 @@
         answers: [
           {
             letter: "A",
-            text: "I see this as a symptom of a broken communication system and start thinking about how we could redesign internal comms to be clearer and more human."
+            text: "I see it as a sign of a broader communication problem and start thinking about how the team could redesign internal comms to be clearer and more human."
           },
           {
             letter: "B",
-            text: "I run it through AI to extract the key points and action items, then respond concisely to what actually matters."
+            text: "I run it through AI to pull out the key points and action items, then respond to what actually matters."
           },
           {
             letter: "C",
-            text: "I read it carefully, maybe twice, and craft a thoughtful response the old-fashioned way."
+            text: "I read it carefully, maybe twice, and write a thoughtful response the traditional way."
           },
           {
             letter: "D",
-            text: "That's definitely AI-written, but whatever. I generate an AI response to their AI message and move on. Email ping-pong complete."
+            text: "I recognize it as AI-written, generate a reply with AI, and move on."
           },
           {
             letter: "E",
-            text: "I respond in detail to every point they raised, offer to help with three related things they didn't ask for, and cc two other people who might benefit."
+            text: "I respond to every point in detail, offer help with a few related things they did not ask about, and copy in a couple of colleagues who might find it useful."
           }
         ]
       },
@@ -788,23 +775,23 @@
         answers: [
           {
             letter: "A",
-            text: "I think the policy misses the point. We should be asking what kinds of work require AI in the first place, and redesigning roles accordingly."
+            text: "I think the policy is asking the wrong question. The better question is what kinds of work should involve AI in the first place, and how roles should be redesigned around that."
           },
           {
             letter: "B",
-            text: "Makes sense. I already review AI outputs carefully, so this just formalizes what good practice looks like."
+            text: "It makes sense. I already review AI outputs carefully, so this formalizes what I consider good practice."
           },
           {
             letter: "C",
-            text: "Finally. This is what I've been saying all along. You can't just outsource thinking to a machine and expect quality results."
+            text: "I think it is a reasonable and necessary guardrail. Outsourcing judgment to AI without review creates real quality risks."
           },
           {
             letter: "D",
-            text: "Annoying. This is going to slow me down. I'll comply on paper but honestly, most of my AI outputs are fine as-is."
+            text: "It feels like an added burden. I will follow the policy, but most of what I produce with AI is solid without extra review steps."
           },
           {
             letter: "E",
-            text: "Great, another thing to do. I'll build time into my already packed schedule to review everything properly, even though I'm barely keeping up as it is."
+            text: "I support it, but I am already stretched thin. Finding time to review everything properly is going to be a real challenge."
           }
         ]
       },
@@ -813,23 +800,23 @@
         answers: [
           {
             letter: "A",
-            text: "I help them see this as an opportunity to rethink their whole workflow, not just solve one task. Let's design a better system."
+            text: "I help them see it as an opportunity to rethink how they approach that whole category of work, not just the immediate task."
           },
           {
             letter: "B",
-            text: "I show them the specific AI tool or prompt that would help, and walk them through how to verify the output."
+            text: "I show them the specific tool or prompt that would help and walk them through how to check the output before using it."
           },
           {
             letter: "C",
-            text: "I offer guidance based on how I learned to do it, sharing the manual techniques and expertise that took me years to develop."
+            text: "I sit down with them and share how I learned to do it, including the manual techniques and judgment calls that come with experience."
           },
           {
             letter: "D",
-            text: "I send them an AI-generated solution and tell them to use that. Problem solved."
+            text: "I send them an AI-generated solution and suggest they use it. It gets them moving quickly."
           },
           {
             letter: "E",
-            text: "I offer to do it for them since AI makes me so fast. I can knock it out in 10 minutes, and I'm already helping three other people today anyway."
+            text: "I offer to just handle it for them since I can turn it around fast. I am already helping several other people today, and one more is manageable."
           }
         ]
       }
@@ -848,7 +835,7 @@
       A: {
         type: "The Architect",
         oneLiner: "Sees AI as a catalyst for reimagining work entirely, designing new processes and unlocking possibilities that didn't exist before.",
-        body: "You see AI as a fundamental shift in how work gets done — not just a tool, but a catalyst for reimagining processes, roles, and possibilities. You're energized by designing new workflows from scratch, identifying opportunities that didn't exist before, and thinking strategically about how AI can unlock entirely new ways of solving problems. You're comfortable with ambiguity and experimentation. Your strength is seeing the forest, not just the trees.",
+        body: "You see AI as a fundamental shift in how work gets done — not just a tool, but a catalyst for reimagining processes, roles, and possibilities. You're energized by designing new workflows from scratch, identifying opportunities that didn't exist before, and thinking strategically about how AI can unlock entirely new business models or ways of solving problems. You're comfortable with ambiguity and experimentation, often serving as a bridge between technical capabilities and organizational vision. Your strength is seeing the forest, not just the trees.",
         watchOut: "Getting so focused on the future that you lose sight of immediate, practical needs. Your ambitious redesigns may outpace your organization's readiness to change."
       },
       B: {
@@ -860,20 +847,20 @@
       C: {
         type: "The Resister",
         oneLiner: "Skeptical of AI hype and sticks with proven methods, valuing human expertise and craftsmanship over untested tools.",
-        body: "You're skeptical, and perhaps for good reason. Maybe you've seen too many tech fads come and go, or you're concerned about quality, accuracy, or ethical implications. You prefer proven methods and are wary of the hype around AI. While others rush to adopt, you're holding steady with approaches you know work. You value craftsmanship, expertise, and the human element.",
-        watchOut: "The gap is widening. What feels like principled caution today may become competitive disadvantage tomorrow. Your expertise is valuable — consider how AI might amplify rather than replace it."
+        body: "You're skeptical, and perhaps for good reason. Maybe you've seen too many tech fads come and go, or you're concerned about quality, accuracy, environmental, or ethical implications. You prefer proven methods and are wary of the hype around AI. While others rush to adopt, you're holding steady with approaches you know work. You value craftsmanship, expertise, and the human element.",
+        watchOut: "The gap is widening. What feels like principled caution today may become competitive disadvantage tomorrow. Your expertise is valuable. Consider how AI might amplify rather than replace it."
       },
       D: {
         type: "The Over-Optimizer",
         oneLiner: "Delegates too much to AI without sufficient review, creating low-quality output that becomes extra work for colleagues.",
-        body: "You've embraced AI enthusiastically... perhaps too enthusiastically. You delegate extensively to AI tools, sometimes without sufficient review or context. First drafts become final drafts. AI-generated analyses go unchecked. Your output volume has increased, but quality and nuance have suffered. Colleagues spend time deciphering unclear AI-generated emails, fixing errors in AI-drafted documents, or re-doing analyses that missed critical context.",
+        body: "You've embraced AI enthusiastically…perhaps too enthusiastically. You delegate extensively to AI tools, sometimes without sufficient review or context. First drafts become final drafts. AI-generated analyses go unchecked. Your output volume has increased, but quality and nuance have suffered. Your work is creating headaches for others: colleagues spend time deciphering unclear AI-generated emails, fixing errors in AI-drafted documents, or re-doing analyses that missed critical context.",
         watchOut: "Becoming a bottleneck rather than a force multiplier. Speed without judgment creates friction. The time you save may be costing your team — and your reputation."
       },
       E: {
         type: "The Juggler",
-        oneLiner: "Chasing AI's efficiency gains, takes on an unsustainable workload, turning productivity tools into a path toward burnout.",
-        body: "AI has made you faster, so you've taken on more. And more. And more. You're saying yes to projects you'd have declined before, handling a volume of work that once required a team. You're productive in the moment but stretched thin across an ever-expanding role. The promise of AI-powered efficiency has become a treadmill of escalating expectations. Boundaries have blurred, and burnout is creeping in.",
-        watchOut: "Sustainable productivity requires boundaries, not just better tools. AI should create capacity for strategic thinking and rest — not just an excuse to pack your calendar tighter."
+        oneLiner: "Takes on an unsustainable workload in chasing AI's efficiency gains, turning productivity tools into a path toward burnout.",
+        body: "AI has made you faster, so you've taken on more. And more. And more. You're saying yes to projects you'd have declined before, handling a volume of work that once required a team. You're productive in the moment but stretched thin across an ever-expanding role. The promise of AI-powered efficiency has become a treadmill of escalating expectations from yourself, your manager, or your clients. Boundaries have blurred, and burnout is creeping in.",
+        watchOut: "Sustainable productivity requires boundaries, not just better tools. AI should create capacity for strategic thinking and rest, not just an excuse to pack your calendar tighter."
       }
     };
 
